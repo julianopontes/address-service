@@ -1,0 +1,4 @@
+# workaround de bug na versão 5.7.8-rc
+
+[mysqld]
+show_compatibility_56	= ON

@@ -1,0 +1,21 @@
+mysql:
+  image: mysql:5.7
+  ports:
+  - "3306:3306"
+  volumes:
+  - ./mysql.conf:/etc/mysql/conf.d
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_DATABASE: addressdb
+    MYSQL_USER: address
+    MYSQL_PASSWORD: address
+
+api:
+  image: redspark/oracle-jdk:1.8
+  ports:
+  - "8080:8080"
+  volumes:
+  - ./target/address-service.jar:/opt/address-service.jar
+  links:
+  - mysql
+  command: java -jar -Dspring.profiles.active=docker /opt/address-service.jar

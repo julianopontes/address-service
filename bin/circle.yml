@@ -1,0 +1,26 @@
+machine:
+  environment:
+    VERSION: 1.0.0-B$CIRCLE_BUILD_NUM
+    
+  timezone:
+    America/Sao_Paulo
+    
+  java:
+    version: oraclejdk8
+    
+dependencies:
+  override:
+    - mvn --fail-never clean dependency:go-offline || true
+
+general:
+  artifacts:
+    - "target/address-service.jar"
+
+test:
+  override:
+    - mvn versions:set -DnewVersion=$VERSION versions:commit
+    - mvn package cobertura:cobertura coveralls:report
+
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex "./target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
